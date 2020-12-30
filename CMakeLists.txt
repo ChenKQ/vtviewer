@@ -10,6 +10,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
+add_subdirectory(brick)
+
 add_executable(vtviewer main.cpp
     src/mainwindow.cpp src/mainwindow.h src/mainwindow.ui)
 target_link_libraries(vtviewer Qt5::Core Qt5::Gui Qt5::Widgets)
