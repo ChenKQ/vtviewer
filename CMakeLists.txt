@@ -1,0 +1,1 @@
+project(vtviewer LANGUAGES CXX)
