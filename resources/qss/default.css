@@ -1,0 +1,31 @@
+QRadioButton::indicator{
+border-radius:8px;
+width:16px;
+height:16px;
+}
+
+QRadioButton::indicator::unchecked{
+background:qradialgradient(spread:pad,cx:0.5,cy:0.5,radius:0.5,fx:0.5,fy:0.5,
+                        stop:0.6 #FFFFFF,stop:0.7 #D7DBDE);
+}
+
+QRadioButton::indicator::checked{
+background:qradialgradient(spread:pad,cx:0.5,cy:0.5,radius:0.5,fx:0.5,fy:0.5,
+                        stop:0 #E74C3C,stop:0.3 #E74C3C,stop:0.4 #FFFFFF,stop:0.6 #FFFFFF,stop:0.7 #E74C3C);
+}
+
+QProgressBar{
+min-height:10px;
+background:#484848;
+/*background: rgba(248,248,255,255)*/
+border-radius:6px;
+/*text-align:center;*/
+/*border:1px solid #484848;*/
+border:1px solid rgb(16,135,209);
+}
+
+QProgressBar:chunk{
+border-radius:4px;
+background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, stop:0 rgba(0, 255, 0, 255), stop:1 rgba(255, 0, 0, 255));
+/*background-color: rgba(255,0,0, 255);*/
+}
