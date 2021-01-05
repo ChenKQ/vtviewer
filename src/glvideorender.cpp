@@ -1,17 +1,21 @@
 #include "glvideorender.h"
+#include "utils.h"
 
-GLVideoRender<brick::media::PixelFormat::RGB24>::GLVideoRender()
+#include <string>
+#include <stdexcept>
+
+GLImageRender<brick::media::PixelFormat::RGB24>::GLImageRender()
 {
 
 }
 
-GLVideoRender<brick::media::PixelFormat::RGB24>::~GLVideoRender()
+GLImageRender<brick::media::PixelFormat::RGB24>::~GLImageRender()
 {
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ebo);
 }
 
-void GLVideoRender<brick::media::PixelFormat::RGB24>::initialize()
+void GLImageRender<brick::media::PixelFormat::RGB24>::initialize()
 {
     initializeOpenGLFunctions();
 
@@ -68,7 +72,7 @@ void GLVideoRender<brick::media::PixelFormat::RGB24>::initialize()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void GLVideoRender<brick::media::PixelFormat::RGB24>::render(unsigned char **pData, int width, int height)
+void GLImageRender<brick::media::PixelFormat::RGB24>::render(unsigned char **pData, int width, int height, const vtviewer::View& view)
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -77,6 +81,13 @@ void GLVideoRender<brick::media::PixelFormat::RGB24>::render(unsigned char **pDa
 
     m_program.bind();
     {
+        int borderIndex = m_program.uniformLocation("border");
+        glUniform2f(borderIndex, view.GLBorder.x, view.GLBorder.y);
+        int offsetIndex = m_program.uniformLocation("offset");
+        glUniform2f(offsetIndex, view.OffsetGL.x, view.OffsetGL.y);
+        int zoomRateIndex= m_program.uniformLocation("zoomRate");
+        glUniform1f(zoomRateIndex, view.ZoomRate);
+
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texImage);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
@@ -89,19 +100,19 @@ void GLVideoRender<brick::media::PixelFormat::RGB24>::render(unsigned char **pDa
 }
 
 
-GLVideoRender<brick::media::PixelFormat::YUV420P>::GLVideoRender()
+GLImageRender<brick::media::PixelFormat::YUV420P>::GLImageRender()
 {
 
 }
 
-GLVideoRender<brick::media::PixelFormat::YUV420P>::~GLVideoRender()
+GLImageRender<brick::media::PixelFormat::YUV420P>::~GLImageRender()
 {
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ebo);
 }
 
 
-void GLVideoRender<brick::media::PixelFormat::YUV420P>::initialize()
+void GLImageRender<brick::media::PixelFormat::YUV420P>::initialize()
 {
     initializeOpenGLFunctions();
 
@@ -164,7 +175,7 @@ void GLVideoRender<brick::media::PixelFormat::YUV420P>::initialize()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void GLVideoRender<brick::media::PixelFormat::YUV420P>::render(unsigned char **pData, int width, int height)
+void GLImageRender<brick::media::PixelFormat::YUV420P>::render(unsigned char **pData, int width, int height, const vtviewer::View& view)
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -173,10 +184,19 @@ void GLVideoRender<brick::media::PixelFormat::YUV420P>::render(unsigned char **p
 
     m_program.bind();
     {
+        int borderIndex = m_program.uniformLocation("border");
+        glUniform2f(borderIndex, view.GLBorder.x, view.GLBorder.y);
+        int offsetIndex = m_program.uniformLocation("offset");
+        glUniform2f(offsetIndex, view.OffsetGL.x, view.OffsetGL.y);
+        int zoomRateIndex= m_program.uniformLocation("zoomRate");
+        glUniform1f(zoomRateIndex, view.ZoomRate);
+
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, tex_image_yuv420_planes[0]);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0,
                      GL_RED, GL_UNSIGNED_BYTE, pData[0]);
+
+
 
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, tex_image_yuv420_planes[1]);
@@ -195,3 +215,21 @@ void GLVideoRender<brick::media::PixelFormat::YUV420P>::render(unsigned char **p
 }
 
 
+
+std::unique_ptr<ImageRender> ImageRender::CreateInstance(brick::media::PixelFormat pixelFormat)
+{
+    ImageRender* pRender = nullptr;
+    if(brick::media::PixelFormat::YUV420P == pixelFormat)
+    {
+        pRender = new GLImageRender<brick::media::PixelFormat::YUV420P>();
+    }
+    else if(brick::media::PixelFormat::RGB24 == pixelFormat)
+    {
+        pRender = new GLImageRender<brick::media::PixelFormat::RGB24>();
+    }
+//    else
+//    {
+//        throw std::runtime_error(std::string("non-supported pixelf format"));
+//    }
+    return std::unique_ptr<ImageRender>(pRender);
+}

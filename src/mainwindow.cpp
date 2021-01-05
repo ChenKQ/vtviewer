@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_url = "/home/chenkq/Desktop/test.mp4";
     ui->setupUi(this);
+    ui->canvas->setPixelFormat(brick::media::PixelFormat::YUV420P);
     initStyle();
 
     int retcode = reader.init("/home/chenkq/Desktop/test.mp4");
@@ -91,4 +92,24 @@ void MainWindow::on_actionPause_triggered()
 void MainWindow::on_actionExit_triggered()
 {
     close();
+}
+
+void MainWindow::on_actionFit_triggered()
+{
+    ui->canvas->fitDisplay();
+}
+
+void MainWindow::on_actionOriginal_triggered()
+{
+    ui->canvas->originalDisplay();
+}
+
+void MainWindow::on_actionZoomIn_triggered()
+{
+    ui->canvas->zoomIn();
+}
+
+void MainWindow::on_actionZoomOut_triggered()
+{
+    ui->canvas->zoomOut();
 }

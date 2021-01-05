@@ -93,6 +93,10 @@
    <addaction name="actionPause"/>
    <addaction name="actionStop"/>
    <addaction name="separator"/>
+   <addaction name="actionFit"/>
+   <addaction name="actionOriginal"/>
+   <addaction name="actionZoomIn"/>
+   <addaction name="actionZoomOut"/>
    <addaction name="separator"/>
    <addaction name="actionExit"/>
   </widget>
@@ -150,6 +154,26 @@
    </property>
    <property name="toolTip">
     <string>Exit the program</string>
+   </property>
+  </action>
+  <action name="actionFit">
+   <property name="text">
+    <string>Fit</string>
+   </property>
+  </action>
+  <action name="actionOriginal">
+   <property name="text">
+    <string>Original</string>
+   </property>
+  </action>
+  <action name="actionZoomIn">
+   <property name="text">
+    <string>ZoomIn</string>
+   </property>
+  </action>
+  <action name="actionZoomOut">
+   <property name="text">
+    <string>ZoomOut</string>
    </property>
   </action>
  </widget>

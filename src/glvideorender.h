@@ -8,16 +8,33 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 
-template <brick::media::PixelFormat PIX_FMT> class GLVideoRender;
+#include <memory>
 
-template <> class GLVideoRender<brick::media::PixelFormat::RGB24>: public QOpenGLFunctions
+namespace vtviewer
+{
+struct View;
+}
+
+class ImageRender
 {
 public:
-    GLVideoRender();
-    ~GLVideoRender();
+    virtual void initialize() = 0;
+    virtual void render(unsigned char**pData, int width, int height, const vtviewer::View& view) = 0;
+    virtual ~ImageRender() = default;
+
+    static std::unique_ptr<ImageRender> CreateInstance(brick::media::PixelFormat pixelFormat);
+};
+
+template <brick::media::PixelFormat PIX_FMT> class GLImageRender;
+
+template <> class GLImageRender<brick::media::PixelFormat::RGB24>: public QOpenGLFunctions, public ImageRender
+{
+public:
+    GLImageRender();
+    ~GLImageRender();
 
     void initialize();
-    void render(unsigned char**pData, int width, int height);
+    void render(unsigned char**pData, int width, int height, const vtviewer::View& view);
 private:
     QOpenGLShaderProgram m_program;
     QOpenGLVertexArrayObject vao;
@@ -41,14 +58,14 @@ private:
     };
 };
 
-template <> class GLVideoRender<brick::media::PixelFormat::YUV420P>: QOpenGLFunctions
+template <> class GLImageRender<brick::media::PixelFormat::YUV420P>: public QOpenGLFunctions, public ImageRender
 {
 public:
-    GLVideoRender();
-    ~GLVideoRender();
+    GLImageRender();
+    ~GLImageRender();
 
     void initialize();
-    void render(unsigned char**pData, int width, int height);
+    void render(unsigned char**pData, int width, int height, const vtviewer::View& view);
 
 private:
     QOpenGLShaderProgram m_program;
@@ -59,20 +76,12 @@ private:
     QString vertexShaderFile {":/shaders/renderYUV420P.vert"};
     QString fragmentShaderFile{":/shaders/renderYUV420P.frag"};
 
-    //    float vertices[20] = {
-    //        // positions          // texture coords
-    //         1.0f,  1.0f, 0.0f,   1.0f, 0.0f, // top right
-    //         1.0f, -1.0f, 0.0f,   1.0f, 1.0f, // bottom right
-    //        -1.0f, -1.0f, 0.0f,   0.0f, 1.0f, // bottom left
-    //        -1.0f,  1.0f, 0.0f,   0.0f, 0.0f  // top left
-    //    };
-
     float vertices[20] = {
         // positions          // texture coords
-         20.0f,  20.0f, 0.0f,   1.0f, 0.0f, // top right
-         20.0f, -20.0f, 0.0f,   1.0f, 1.0f, // bottom right
-        -20.0f, -20.0f, 0.0f,   0.0f, 1.0f, // bottom left
-        -20.0f,  20.0f, 0.0f,   0.0f, 0.0f  // top left
+         1.0f,  1.0f, 0.0f,   1.0f, 0.0f, // top right
+         1.0f, -1.0f, 0.0f,   1.0f, 1.0f, // bottom right
+        -1.0f, -1.0f, 0.0f,   0.0f, 1.0f, // bottom left
+        -1.0f,  1.0f, 0.0f,   0.0f, 0.0f  // top left
     };
 
     unsigned int indices[6] = {  // note that we start from 0!

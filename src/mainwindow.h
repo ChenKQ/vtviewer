@@ -28,6 +28,14 @@ private slots:
 
     void on_actionExit_triggered();
 
+    void on_actionFit_triggered();
+
+    void on_actionOriginal_triggered();
+
+    void on_actionZoomIn_triggered();
+
+    void on_actionZoomOut_triggered();
+
 private:
     void initStyle();
 
