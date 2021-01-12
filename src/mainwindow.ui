@@ -111,7 +111,7 @@
    </property>
    <property name="icon">
     <iconset resource="../resources/icons.qrc">
-     <normaloff>:/icons/icons/play.jpeg</normaloff>:/icons/icons/play.jpeg</iconset>
+     <normaloff>:/icons/icons/play.png</normaloff>:/icons/icons/play.png</iconset>
    </property>
    <property name="text">
     <string>Play</string>
@@ -123,7 +123,7 @@
   <action name="actionStop">
    <property name="icon">
     <iconset resource="../resources/icons.qrc">
-     <normaloff>:/icons/icons/stop.jpeg</normaloff>:/icons/icons/stop.jpeg</iconset>
+     <normaloff>:/icons/icons/stop.png</normaloff>:/icons/icons/stop.png</iconset>
    </property>
    <property name="text">
     <string>Stop</string>
@@ -135,7 +135,7 @@
   <action name="actionPause">
    <property name="icon">
     <iconset resource="../resources/icons.qrc">
-     <normaloff>:/icons/icons/pause.jpg</normaloff>:/icons/icons/pause.jpg</iconset>
+     <normaloff>:/icons/icons/pause.png</normaloff>:/icons/icons/pause.png</iconset>
    </property>
    <property name="text">
     <string>Pause</string>
@@ -157,21 +157,37 @@
    </property>
   </action>
   <action name="actionFit">
+   <property name="icon">
+    <iconset resource="../resources/icons.qrc">
+     <normaloff>:/icons/icons/Fit.png</normaloff>:/icons/icons/Fit.png</iconset>
+   </property>
    <property name="text">
     <string>Fit</string>
    </property>
   </action>
   <action name="actionOriginal">
+   <property name="icon">
+    <iconset resource="../resources/icons.qrc">
+     <normaloff>:/icons/icons/Original.png</normaloff>:/icons/icons/Original.png</iconset>
+   </property>
    <property name="text">
     <string>Original</string>
    </property>
   </action>
   <action name="actionZoomIn">
+   <property name="icon">
+    <iconset resource="../resources/icons.qrc">
+     <normaloff>:/icons/icons/ZoomIn.png</normaloff>:/icons/icons/ZoomIn.png</iconset>
+   </property>
    <property name="text">
     <string>ZoomIn</string>
    </property>
   </action>
   <action name="actionZoomOut">
+   <property name="icon">
+    <iconset resource="../resources/icons.qrc">
+     <normaloff>:/icons/icons/ZoomOut.png</normaloff>:/icons/icons/ZoomOut.png</iconset>
+   </property>
    <property name="text">
     <string>ZoomOut</string>
    </property>

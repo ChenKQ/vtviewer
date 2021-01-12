@@ -100,11 +100,15 @@ void View::originalDisplay(const SizeInt &winSize, const SizeInt &imgSize)
 void View::zoomIn()
 {
     ZoomRate *= ZoomSensitivity;
+    OffsetGL.x *= ZoomSensitivity;
+    OffsetGL.y *= ZoomSensitivity;
 }
 
 void View::zoomOut()
 {
     ZoomRate /= ZoomSensitivity;
+    OffsetGL.x /= ZoomSensitivity;
+    OffsetGL.y /= ZoomSensitivity;
 }
 
 void View::drag(const OffsetInt &offsetInQt, const SizeInt &windowSize)
