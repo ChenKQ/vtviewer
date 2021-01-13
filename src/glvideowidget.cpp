@@ -13,51 +13,26 @@ GlVideoWidget::~GlVideoWidget()
 
 }
 
-void GlVideoWidget::setPixelFormat(int pixelFormat)
+void GlVideoWidget::updateBuffer(const cv::Mat& img)
 {
-    m_pixel_format = static_cast<brick::media::PixelFormat>(pixelFormat);
-    m_pRender = ImageRender::CreateInstance(m_pixel_format);
-}
-
-void GlVideoWidget::updateBuffer(const unsigned char* const* data, const int* linesize,
-                                      int width, int height, int pixelFormat)
-{
-    assert(m_pixel_format==pixelFormat);
-    assert(m_pRender);
-
-    if(imgBuffer.empty() || m_width!= width || m_height!=height)
+    if(imgBuffer.empty() || imgBuffer.cols!= img.cols || imgBuffer.rows!=img.rows)
     {
-        m_width = width;
-        m_height = height;
-        m_pixel_format = static_cast<brick::media::PixelFormat>(pixelFormat);
-        imgBuffer = brick::media::Image(width, height, m_pixel_format);
+        imgBuffer = cv::Mat(img.rows, img.cols, CV_8UC3);
     }
 
-    imgBuffer.fillBuffer(data, linesize, width, height, pixelFormat, true);
+    img.copyTo(imgBuffer);
     this->update();
-}
-
-void GlVideoWidget::updateBuffer(const unsigned char *data, int stride,
-                                 int width, int height, int pixelFormat)
-{
-    const unsigned char* dataArray[4] {nullptr};
-    dataArray[0] = data;
-
-    int linesizes[4] {0};
-    linesizes[0] = stride;
-
-    updateBuffer(dataArray, linesizes, width, height, pixelFormat);
 }
 
 void GlVideoWidget::fitDisplay()
 {
-    m_view.fitDisplay({width(),height()}, {imgBuffer.getWidth(), imgBuffer.getHeight()});
+    m_view.fitDisplay({width(),height()}, {imgBuffer.cols, imgBuffer.rows});
     this->update();
 }
 
 void GlVideoWidget::originalDisplay()
 {
-    m_view.originalDisplay({width(),height()}, {imgBuffer.getWidth(), imgBuffer.getHeight()});
+    m_view.originalDisplay({width(),height()}, {imgBuffer.cols, imgBuffer.rows});
     this->update();
 }
 
@@ -75,7 +50,7 @@ void GlVideoWidget::zoomOut()
 
 void GlVideoWidget::initializeGL()
 {
-    m_pRender->initialize();
+    m_render.initialize();
 
     vtviewer::SizeInt winSize {this->width(), this->height()};
     m_view.fitDisplay(winSize, winSize);
@@ -94,11 +69,11 @@ void GlVideoWidget::paintGL()
     vtviewer::SizeInt imgSize = winSize;
     if(!imgBuffer.empty())
     {
-        imgSize = {imgBuffer.getWidth(), imgBuffer.getHeight()};
+        imgSize = {imgBuffer.cols, imgBuffer.rows};
     }
     m_view.updateGLBorder(winSize, imgSize);
 
-    m_pRender->render(imgBuffer.getDataPtr(), m_width, m_height, m_view);
+    m_render.render(imgBuffer.data, imgBuffer.cols, imgBuffer.rows, m_view);
 }
 
 void GlVideoWidget::mousePressEvent(QMouseEvent *event)

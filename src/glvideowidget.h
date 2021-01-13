@@ -1,13 +1,13 @@
 #ifndef ANTICORE_GLVIDEOWIDGET_H
 #define ANTICORE_GLVIDEOWIDGET_H
 
-#include "media/ffmpeg.h"
 #include "glvideorender.h"
-#include "media/image.h"
 #include "utils.h"
 
 #include <QOpenGLWidget>
 #include <QPoint>
+
+#include <opencv2/core.hpp>
 
 class GlVideoWidget : public QOpenGLWidget
 {
@@ -15,14 +15,7 @@ public:
     GlVideoWidget(QWidget* parent = nullptr);
     ~GlVideoWidget() override;
 
-    // call this method before call initializeGL and paintGL
-    void setPixelFormat(int pixelFormat);
-
-    void updateBuffer(const unsigned char* const* data, const int* linesize,
-                      int width, int height, int pixelFormat);
-
-    void updateBuffer(const unsigned char* data, int stride,
-                      int width, int height, int pixelFormat);
+    void updateBuffer(const cv::Mat& img);
 
     void fitDisplay();
     void originalDisplay();
@@ -39,12 +32,8 @@ protected:
     void wheelEvent(QWheelEvent* event) override;
 
 private:
-    std::unique_ptr<ImageRender> m_pRender;
-    brick::media::Image imgBuffer;
-
-    int m_height = 0;
-    int m_width = 0;
-    brick::media::PixelFormat m_pixel_format = brick::media::PixelFormat::UNKNOWN;
+    GLImageRender m_render;
+    cv::Mat imgBuffer;
 
     vtviewer::View m_view;
     QPoint m_loc_mouse_press;
