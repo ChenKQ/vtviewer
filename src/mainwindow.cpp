@@ -8,24 +8,19 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    m_url = "/home/chenkq/Desktop/test.mp4";
     ui->setupUi(this);
-    ui->canvas->setPixelFormat(brick::media::PixelFormat::YUV420P);
     initStyle();
 
-    int retcode = reader.init("/home/chenkq/Desktop/test.mp4");
-//    int retcode = reader.init("rtmp://58.200.131.2:1935/livetv/hunantv");
-    assert(retcode==0);
-    reader.installActionsOnFetchedVideoFrame([obj=this](const unsigned char* const* data, const int* linesize,
-                                             int width, int height, int pixelFormat)
+    capture.open("/home/chenkq/Desktop/test.mp4");
+    pm.setImageProcessor([obj=this](cv::Mat& img)
     {
-        obj->ui->canvas->updateBuffer(data, linesize, width, height, pixelFormat);
+        obj->ui->canvas->updateBuffer(img);
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
     });
 }
 
 MainWindow::~MainWindow()
 {
-    pm.stop(reader);
     delete ui;
 }
 
@@ -74,19 +69,18 @@ void MainWindow::initStyle()
 
 void MainWindow::on_actionPlay_triggered()
 {
+    pm.play(capture, true);
 
-    pm.play(reader, true);
 }
 
 void MainWindow::on_actionStop_triggered()
 {
-    pm.stop(reader);
-    reader.reset();
+    pm.stop(capture);
 }
 
 void MainWindow::on_actionPause_triggered()
 {
-    pm.play(reader, false);
+    pm.play(capture, false);
 }
 
 void MainWindow::on_actionExit_triggered()

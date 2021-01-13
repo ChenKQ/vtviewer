@@ -1,9 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "media/ffmpegreader.h"
-#include "media/playmanager.h"
+#include "videocapture.h"
+#include "playmanager.h"
 
+#include <opencv2/core.hpp>
 #include <QMainWindow>
 
 
@@ -42,9 +43,8 @@ private:
 private:
     Ui::MainWindow *ui;
 
-    std::string m_url;
-    brick::media::FFMpegReader reader;
-    brick::media::PlayManager pm;
+    vtviewer::VideoCapture capture;
+    vtviewer::PlayManager pm;
 };
 
 #endif // MAINWINDOW_H
