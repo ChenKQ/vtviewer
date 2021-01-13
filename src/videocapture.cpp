@@ -49,6 +49,17 @@ void VideoCapture::setFrameIndex(size_t index)
     capture.set(cv::CAP_PROP_POS_FRAMES, index);
 }
 
+std::unique_ptr<IVideoCapture> IVideoCapture::CreateInstance(const std::string &captureType)
+{
+    if(captureType == "videoFile")
+    {
+        VideoCapture* p = new VideoCapture;
+        return std::unique_ptr<IVideoCapture>(p);
+    }
+
+    return nullptr;
+}
+
 
 }   // namespace vtviewer
 

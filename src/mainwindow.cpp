@@ -11,20 +11,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     initStyle();
-
-    capture.open("/home/chenkq/Desktop/test.mp4");
-    initializeSlider();
-    pm.setImageProcessor([obj=this](cv::Mat& img)
-    {
-        obj->ui->canvas->updateBuffer(img);
-        obj->updateSlider(obj->capture, *obj->ui->horizontalSlider);
-        std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    });
 }
 
 MainWindow::~MainWindow()
 {
-    pm.stop(capture);
+    if(m_pCapture)
+    {
+        pm.stop(*m_pCapture);
+    }
     delete ui;
 }
 
@@ -73,7 +67,7 @@ void MainWindow::initStyle()
 
 void MainWindow::initializeSlider()
 {
-    size_t length = capture.frameCount();
+    size_t length = m_pCapture->frameCount();
     ui->horizontalSlider->setMinimum(0);
     ui->horizontalSlider->setMaximum(static_cast<int>(length));
     ui->horizontalSlider->setValue(0);
@@ -87,21 +81,29 @@ void MainWindow::updateSlider(const vtviewer::IVideoCapture &cap, QSlider &slide
 
 void MainWindow::on_actionPlay_triggered()
 {
-    pm.play(capture, true);
-
+    if(m_pCapture)
+    {
+        pm.play(*m_pCapture, true);
+    }
 }
 
 void MainWindow::on_actionStop_triggered()
 {
-    pm.stop(capture);
-    initializeSlider();
+    if(m_pCapture)
+    {
+        pm.stop(*m_pCapture);
+        initializeSlider();
+    }
     cv::Mat img;
     ui->canvas->updateBuffer(img);
 }
 
 void MainWindow::on_actionPause_triggered()
 {
-    pm.play(capture, false);
+    if(m_pCapture)
+    {
+        pm.play(*m_pCapture, false);
+    }
 }
 
 void MainWindow::on_actionExit_triggered()
@@ -131,32 +133,64 @@ void MainWindow::on_actionZoomOut_triggered()
 
 void MainWindow::on_actionPrevious_triggered()
 {
-    cv::Mat img = capture.previous();
-    updateSlider(capture, *ui->horizontalSlider);
-    ui->canvas->updateBuffer(img);
+    if(m_pCapture)
+    {
+        cv::Mat img = m_pCapture->previous();
+        updateSlider(*m_pCapture, *ui->horizontalSlider);
+        ui->canvas->updateBuffer(img);
+    }
 }
 
 void MainWindow::on_actionNext_triggered()
 {
-    cv::Mat img = capture.next();
-    updateSlider(capture, *ui->horizontalSlider);
-    ui->canvas->updateBuffer(img);
+    if(m_pCapture)
+    {
+        cv::Mat img = m_pCapture->next();
+        updateSlider(*m_pCapture, *ui->horizontalSlider);
+        ui->canvas->updateBuffer(img);
+    }
 }
 
 
 void MainWindow::on_horizontalSlider_sliderPressed()
 {
-    pm.play(capture, false);
+    if(m_pCapture)
+    {
+        pm.play(*m_pCapture, false);
+    }
+
 }
 
 void MainWindow::on_horizontalSlider_sliderReleased()
 {
-    pm.play(capture, true);
+    if(m_pCapture)
+    {
+        pm.play(*m_pCapture, true);
+    }
 }
 
 void MainWindow::on_horizontalSlider_sliderMoved(int position)
 {
-    capture.setFrameIndex(static_cast<size_t>(position));
-    cv::Mat img = capture.next();
-    ui->canvas->updateBuffer(img);
+    if(m_pCapture)
+    {
+        m_pCapture->setFrameIndex(static_cast<size_t>(position));
+        cv::Mat img = m_pCapture->next();
+        ui->canvas->updateBuffer(img);
+    }
+}
+
+void MainWindow::on_actionVideoFile_triggered()
+{
+    m_pCapture = vtviewer::IVideoCapture::CreateInstance("videoFile");
+    m_pCapture->open("/home/chenkq/Desktop/test.mp4");
+    initializeSlider();
+
+    pm.setImageProcessor([obj=this](cv::Mat& img)
+    {
+        obj->ui->canvas->updateBuffer(img);
+        obj->updateSlider(*obj->m_pCapture, *obj->ui->horizontalSlider);
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    });
+
+    on_actionNext_triggered();
 }

@@ -5,6 +5,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>
 
+#include <memory>
+
 namespace vtviewer
 {
 
@@ -20,6 +22,8 @@ public:
     virtual size_t currentFrameIndex() const = 0;
     virtual void setFrameIndex(size_t index) = 0;
     virtual ~IVideoCapture() = default;
+
+    static std::unique_ptr<IVideoCapture> CreateInstance(const std::string& captureType);
 
 };
 

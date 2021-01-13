@@ -7,6 +7,7 @@
 #include <opencv2/core.hpp>
 #include <QMainWindow>
 #include <QSlider>
+#include <memory>
 
 
 namespace Ui {
@@ -48,6 +49,8 @@ private slots:
 
     void on_horizontalSlider_sliderMoved(int position);
 
+    void on_actionVideoFile_triggered();
+
 private:
     void initStyle();
 
@@ -57,7 +60,7 @@ private:
 private:
     Ui::MainWindow *ui;
 
-    vtviewer::VideoCapture capture;
+    std::unique_ptr<vtviewer::IVideoCapture> m_pCapture;
     vtviewer::PlayManager pm;
 };
 
