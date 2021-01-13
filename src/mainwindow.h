@@ -6,6 +6,7 @@
 
 #include <opencv2/core.hpp>
 #include <QMainWindow>
+#include <QSlider>
 
 
 namespace Ui {
@@ -37,8 +38,21 @@ private slots:
 
     void on_actionZoomOut_triggered();
 
+    void on_actionPrevious_triggered();
+
+    void on_actionNext_triggered();
+
+    void on_horizontalSlider_sliderPressed();
+
+    void on_horizontalSlider_sliderReleased();
+
+    void on_horizontalSlider_sliderMoved(int position);
+
 private:
     void initStyle();
+
+    void initializeSlider();
+    void updateSlider(const vtviewer::IVideoCapture& cap, QSlider& slider);
 
 private:
     Ui::MainWindow *ui;

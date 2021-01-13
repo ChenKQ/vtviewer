@@ -3,6 +3,7 @@
 
 #include <QFile>
 #include <QTextStream>
+#include <QSlider>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -12,15 +13,18 @@ MainWindow::MainWindow(QWidget *parent) :
     initStyle();
 
     capture.open("/home/chenkq/Desktop/test.mp4");
+    initializeSlider();
     pm.setImageProcessor([obj=this](cv::Mat& img)
     {
         obj->ui->canvas->updateBuffer(img);
+        obj->updateSlider(obj->capture, *obj->ui->horizontalSlider);
         std::this_thread::sleep_for(std::chrono::milliseconds(20));
     });
 }
 
 MainWindow::~MainWindow()
 {
+    pm.stop(capture);
     delete ui;
 }
 
@@ -67,6 +71,20 @@ void MainWindow::initStyle()
     qApp->setStyleSheet(qss);
 }
 
+void MainWindow::initializeSlider()
+{
+    size_t length = capture.frameCount();
+    ui->horizontalSlider->setMinimum(0);
+    ui->horizontalSlider->setMaximum(static_cast<int>(length));
+    ui->horizontalSlider->setValue(0);
+}
+
+void MainWindow::updateSlider(const vtviewer::IVideoCapture &cap, QSlider &slider)
+{
+    int captureIndex = static_cast<int>(cap.currentFrameIndex());
+    slider.setValue(captureIndex);
+}
+
 void MainWindow::on_actionPlay_triggered()
 {
     pm.play(capture, true);
@@ -76,6 +94,9 @@ void MainWindow::on_actionPlay_triggered()
 void MainWindow::on_actionStop_triggered()
 {
     pm.stop(capture);
+    initializeSlider();
+    cv::Mat img;
+    ui->canvas->updateBuffer(img);
 }
 
 void MainWindow::on_actionPause_triggered()
@@ -106,4 +127,36 @@ void MainWindow::on_actionZoomIn_triggered()
 void MainWindow::on_actionZoomOut_triggered()
 {
     ui->canvas->zoomOut();
+}
+
+void MainWindow::on_actionPrevious_triggered()
+{
+    cv::Mat img = capture.previous();
+    updateSlider(capture, *ui->horizontalSlider);
+    ui->canvas->updateBuffer(img);
+}
+
+void MainWindow::on_actionNext_triggered()
+{
+    cv::Mat img = capture.next();
+    updateSlider(capture, *ui->horizontalSlider);
+    ui->canvas->updateBuffer(img);
+}
+
+
+void MainWindow::on_horizontalSlider_sliderPressed()
+{
+    pm.play(capture, false);
+}
+
+void MainWindow::on_horizontalSlider_sliderReleased()
+{
+    pm.play(capture, true);
+}
+
+void MainWindow::on_horizontalSlider_sliderMoved(int position)
+{
+    capture.setFrameIndex(static_cast<size_t>(position));
+    cv::Mat img = capture.next();
+    ui->canvas->updateBuffer(img);
 }

@@ -9,7 +9,7 @@ bool vtviewer::VideoCapture::open(const std::string &path)
     return capture.open(path, cv::CAP_FFMPEG);
 }
 
-bool VideoCapture::isOpen()
+bool VideoCapture::isOpen() const
 {
     return capture.isOpened();
 }
@@ -17,7 +17,7 @@ bool VideoCapture::isOpen()
 cv::Mat VideoCapture::previous()
 {
     size_t currentIndex = currentFrameIndex();
-    capture.set(cv::CAP_PROP_POS_FRAMES, currentIndex-1);
+    capture.set(cv::CAP_PROP_POS_FRAMES, currentIndex-2);
     capture >> image;
     return image;
 }
@@ -34,14 +34,19 @@ void VideoCapture::reset()
     open(path);
 }
 
-size_t VideoCapture::frameCount()
+size_t VideoCapture::frameCount() const
 {
     return static_cast<size_t>(capture.get(cv::CAP_PROP_FRAME_COUNT));
 }
 
-size_t VideoCapture::currentFrameIndex()
+size_t VideoCapture::currentFrameIndex() const
 {
     return static_cast<size_t>(capture.get(cv::CAP_PROP_POS_FRAMES));
+}
+
+void VideoCapture::setFrameIndex(size_t index)
+{
+    capture.set(cv::CAP_PROP_POS_FRAMES, index);
 }
 
 

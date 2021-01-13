@@ -33,6 +33,13 @@
     <item>
      <widget class="GlVideoWidget" name="canvas"/>
     </item>
+    <item>
+     <widget class="QSlider" name="horizontalSlider">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -48,12 +55,22 @@
     <property name="title">
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menu">
+     <property name="title">
+      <string>打开...</string>
+     </property>
+     <addaction name="actionVideoFile"/>
+     <addaction name="actionOTB"/>
+     <addaction name="actionVOT"/>
+    </widget>
+    <addaction name="menu"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuViewer">
     <property name="title">
      <string>Viewer</string>
     </property>
-    <addaction name="actionOTB"/>
    </widget>
    <widget class="QMenu" name="menuLabel">
     <property name="title">
@@ -92,6 +109,8 @@
    <addaction name="actionPlay"/>
    <addaction name="actionPause"/>
    <addaction name="actionStop"/>
+   <addaction name="actionPrevious"/>
+   <addaction name="actionNext"/>
    <addaction name="separator"/>
    <addaction name="actionFit"/>
    <addaction name="actionOriginal"/>
@@ -100,11 +119,6 @@
    <addaction name="separator"/>
    <addaction name="actionExit"/>
   </widget>
-  <action name="actionOTB">
-   <property name="text">
-    <string>OTB</string>
-   </property>
-  </action>
   <action name="actionPlay">
    <property name="checkable">
     <bool>false</bool>
@@ -190,6 +204,44 @@
    </property>
    <property name="text">
     <string>ZoomOut</string>
+   </property>
+  </action>
+  <action name="actionPrevious">
+   <property name="icon">
+    <iconset resource="../resources/icons.qrc">
+     <normaloff>:/icons/icons/backward.png</normaloff>:/icons/icons/backward.png</iconset>
+   </property>
+   <property name="text">
+    <string>Previous</string>
+   </property>
+  </action>
+  <action name="actionNext">
+   <property name="icon">
+    <iconset resource="../resources/icons.qrc">
+     <normaloff>:/icons/icons/forward.png</normaloff>:/icons/icons/forward.png</iconset>
+   </property>
+   <property name="text">
+    <string>Next</string>
+   </property>
+  </action>
+  <action name="actionExit_2">
+   <property name="text">
+    <string>退出</string>
+   </property>
+  </action>
+  <action name="actionVideoFile">
+   <property name="text">
+    <string>Video File</string>
+   </property>
+  </action>
+  <action name="actionOTB">
+   <property name="text">
+    <string>OTB</string>
+   </property>
+  </action>
+  <action name="actionVOT">
+   <property name="text">
+    <string>VOT</string>
    </property>
   </action>
  </widget>

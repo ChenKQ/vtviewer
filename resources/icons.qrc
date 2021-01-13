@@ -8,5 +8,7 @@
         <file>icons/pause.png</file>
         <file>icons/play.png</file>
         <file>icons/stop.png</file>
+        <file>icons/backward.png</file>
+        <file>icons/forward.png</file>
     </qresource>
 </RCC>
