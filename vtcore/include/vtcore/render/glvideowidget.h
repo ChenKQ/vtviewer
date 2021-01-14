@@ -1,13 +1,18 @@
 #ifndef ANTICORE_GLVIDEOWIDGET_H
 #define ANTICORE_GLVIDEOWIDGET_H
 
-#include "glvideorender.h"
-#include "utils.h"
+#include "vtcore/render/glvideorender.h"
+#include "vtcore/render/view.h"
 
 #include <QOpenGLWidget>
 #include <QPoint>
 
 #include <opencv2/core.hpp>
+
+namespace vtcore
+{
+namespace  render
+{
 
 class GlVideoWidget : public QOpenGLWidget
 {
@@ -32,12 +37,14 @@ protected:
     void wheelEvent(QWheelEvent* event) override;
 
 private:
-    GLImageRender m_render;
+    vtcore::render::GLImageRender m_render;
     cv::Mat imgBuffer;
 
-    vtviewer::View m_view;
+    vtcore::render::View m_view;
     QPoint m_loc_mouse_press;
 };
 
+}   // namespace render
+}   // namespace vtcore
 
 #endif // ANTICORE_GLVIDEOWIDGET_H

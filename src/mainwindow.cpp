@@ -4,6 +4,9 @@
 #include <QFile>
 #include <QTextStream>
 #include <QSlider>
+#include <QFileDialog>
+
+#include <thread>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -73,7 +76,7 @@ void MainWindow::initializeSlider()
     ui->horizontalSlider->setValue(0);
 }
 
-void MainWindow::updateSlider(const vtviewer::IVideoCapture &cap, QSlider &slider)
+void MainWindow::updateSlider(const vtcore::io::IVideoCapture &cap, QSlider &slider)
 {
     int captureIndex = static_cast<int>(cap.currentFrameIndex());
     slider.setValue(captureIndex);
@@ -181,16 +184,29 @@ void MainWindow::on_horizontalSlider_sliderMoved(int position)
 
 void MainWindow::on_actionVideoFile_triggered()
 {
-    m_pCapture = vtviewer::IVideoCapture::CreateInstance("videoFile");
-    m_pCapture->open("/home/chenkq/Desktop/test.mp4");
-    initializeSlider();
+    QFileDialog fileDlg;
+    fileDlg.setWindowTitle(QStringLiteral("choose a video file..."));
+    fileDlg.setDirectory("./");
+    fileDlg.setNameFilter(tr("File(*.*)"));
+    fileDlg.setFileMode(QFileDialog::ExistingFile);
+    fileDlg.setViewMode(QFileDialog::Detail);
 
-    pm.setImageProcessor([obj=this](cv::Mat& img)
+    if(fileDlg.exec())
     {
-        obj->ui->canvas->updateBuffer(img);
-        obj->updateSlider(*obj->m_pCapture, *obj->ui->horizontalSlider);
-        std::this_thread::sleep_for(std::chrono::milliseconds(20));
-    });
+        QString fileName = fileDlg.selectedFiles()[0];
+        pm.stop(*m_pCapture);
+        m_pCapture = vtcore::io::IVideoCapture::CreateInstance("videoFile");
+        m_pCapture->reset();
+        m_pCapture->open(fileName.toStdString());
+        initializeSlider();
 
-    on_actionNext_triggered();
+        pm.setImageProcessor([obj=this](cv::Mat& img)
+        {
+            obj->ui->canvas->updateBuffer(img);
+            obj->updateSlider(*obj->m_pCapture, *obj->ui->horizontalSlider);
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        });
+
+        on_actionNext_triggered();
+    }
 }

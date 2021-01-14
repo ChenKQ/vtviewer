@@ -1,8 +1,13 @@
-#include "glvideorender.h"
-#include "utils.h"
+#include "vtcore/render/glvideorender.h"
+#include "vtcore/render/view.h"
 
 #include <string>
 #include <stdexcept>
+
+namespace vtcore
+{
+namespace render
+{
 
 GLImageRender::GLImageRender()
 {
@@ -72,7 +77,7 @@ void GLImageRender::initialize()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void GLImageRender::render(const unsigned char*pData, int width, int height, const vtviewer::View& view)
+void GLImageRender::render(const unsigned char*pData, int width, int height, const View& view)
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -98,4 +103,8 @@ void GLImageRender::render(const unsigned char*pData, int width, int height, con
     }
     m_program.release();
 }
+
+}   // namespace render
+}   // namespace vtcore
+
 

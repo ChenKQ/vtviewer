@@ -1,7 +1,12 @@
-#include "glvideowidget.h"
-#include "utils.h"
+#include "vtcore/render/glvideowidget.h"
+#include "vtcore/render/view.h"
 
 #include <QMouseEvent>
+
+namespace vtcore
+{
+namespace render
+{
 
 GlVideoWidget::GlVideoWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
@@ -52,7 +57,7 @@ void GlVideoWidget::initializeGL()
 {
     m_render.initialize();
 
-    vtviewer::SizeInt winSize {this->width(), this->height()};
+    vtcore::render::SizeInt winSize {this->width(), this->height()};
     m_view.fitDisplay(winSize, winSize);
 }
 
@@ -65,8 +70,8 @@ void GlVideoWidget::resizeGL(int w, int h)
 
 void GlVideoWidget::paintGL()
 {
-    vtviewer::SizeInt winSize {this->width(), this->height()};
-    vtviewer::SizeInt imgSize = winSize;
+    vtcore::render::SizeInt winSize {this->width(), this->height()};
+    vtcore::render::SizeInt imgSize = winSize;
     if(!imgBuffer.empty())
     {
         imgSize = {imgBuffer.cols, imgBuffer.rows};
@@ -86,7 +91,7 @@ void GlVideoWidget::mouseMoveEvent(QMouseEvent *event)
     QPoint currentPos = event->pos();
     if(event->DragMove)
     {
-        vtviewer::OffsetInt offsetInQt = {currentPos.x() - m_loc_mouse_press.x(), -currentPos.y() + m_loc_mouse_press.y()};
+        vtcore::render::OffsetInt offsetInQt = {currentPos.x() - m_loc_mouse_press.x(), -currentPos.y() + m_loc_mouse_press.y()};
         m_view.drag(offsetInQt, {width(), height()});
         m_loc_mouse_press = event->pos();
         this->update();
@@ -104,4 +109,7 @@ void GlVideoWidget::wheelEvent(QWheelEvent *event)
         zoomOut();
     }
 }
+
+}   // namespace render
+}   // namespace vtcore
 

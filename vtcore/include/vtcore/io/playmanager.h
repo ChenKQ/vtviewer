@@ -1,5 +1,5 @@
-#ifndef BRICK_PLAYMANAGER_H
-#define BRICK_PLAYMANAGER_H
+#ifndef PLAYMANAGER_H
+#define PLAYMANAGER_H
 
 #include "videocapture.h"
 
@@ -11,7 +11,9 @@
 #include <functional>
 #include <opencv2/opencv.hpp>
 
-namespace vtviewer
+namespace vtcore
+{
+namespace io
 {
 
 class PlayManager final
@@ -42,6 +44,7 @@ private:
     void producer_thread(IVideoCapture &reader);
 };
 
-}   //namespac vtviewer
+}   // namespace io
+}   //namespac vtcore
 
-#endif // BRICK_PLAYMANAGER_H
+#endif // PLAYMANAGER_H

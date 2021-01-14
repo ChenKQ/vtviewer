@@ -1,9 +1,11 @@
-#include "videocapture.h"
+#include "vtcore/io/videocapture.h"
 
-namespace vtviewer
+namespace vtcore
+{
+namespace io
 {
 
-bool vtviewer::VideoCapture::open(const std::string &path)
+bool VideoCapture::open(const std::string &path)
 {
     this->path = path;
     return capture.open(path, cv::CAP_FFMPEG);
@@ -60,7 +62,7 @@ std::unique_ptr<IVideoCapture> IVideoCapture::CreateInstance(const std::string &
     return nullptr;
 }
 
-
+}   // namespace io
 }   // namespace vtviewer
 
 

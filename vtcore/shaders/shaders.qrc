@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/shaders">
+        <file>cross.frag</file>
+        <file>cross.vert</file>
+        <file>indicator.frag</file>
+        <file>indicator.vert</file>
+        <file>marks.frag</file>
+        <file>marks.vert</file>
+        <file>point.frag</file>
+        <file>point.vert</file>
+        <file>rect.frag</file>
+        <file>rect.vert</file>
+        <file>renderRGB.frag</file>
+        <file>renderRGB.vert</file>
+        <file>renderYUV420P.frag</file>
+        <file>renderYUV420P.vert</file>
+        <file>shaders.qrc</file>
+    </qresource>
+</RCC>

@@ -10,23 +10,19 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
-find_package(OpenGL REQUIRED)
-find_package(OpenCV REQUIRED)
-message("opengl functions !!!!!:" ${OpenGL_LIBRARIES})
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    list(APPEND LINK_LIBS "pthread")
-endif()
+#find_package(OpenGL REQUIRED)
+#find_package(OpenCV REQUIRED)
+#message("opengl functions !!!!!:" ${OpenGL_LIBRARIES})
+#if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+#    list(APPEND LINK_LIBS "pthread")
+#endif()
+
+add_subdirectory(vtcore)
 
 add_executable(vtviewer main.cpp
     src/mainwindow.cpp src/mainwindow.h src/mainwindow.ui
-    src/glvideorender.h src/glvideorender.cpp
-    src/glvideowidget.h src/glvideowidget.cpp
-    resources/qss.qrc resources/icons.qrc resources/shaders.qrc
-    src/utils.h src/utils.cpp
-    src/videocapture.h src/videocapture.cpp
-    src/playmanager.h src/playmanager.cpp
+    resources/qss.qrc resources/icons.qrc
 )
-target_link_libraries(vtviewer Qt5::Core Qt5::Gui Qt5::Widgets
-                      ${OPENGL_LIBRARY} ${OpenCV_LIBS} ${LINK_LIBS}
+target_link_libraries(vtviewer Qt5::Gui vtcore
 )
 target_include_directories(vtviewer PUBLIC ${CMAKE_CURRENT_LIST_DIR})

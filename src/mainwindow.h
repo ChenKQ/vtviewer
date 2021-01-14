@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "videocapture.h"
-#include "playmanager.h"
+#include "vtcore/io/videocapture.h"
+#include "vtcore/io/playmanager.h"
 
 #include <opencv2/core.hpp>
 #include <QMainWindow>
@@ -55,13 +55,13 @@ private:
     void initStyle();
 
     void initializeSlider();
-    void updateSlider(const vtviewer::IVideoCapture& cap, QSlider& slider);
+    void updateSlider(const vtcore::io::IVideoCapture& cap, QSlider& slider);
 
 private:
     Ui::MainWindow *ui;
 
-    std::unique_ptr<vtviewer::IVideoCapture> m_pCapture;
-    vtviewer::PlayManager pm;
+    std::unique_ptr<vtcore::io::IVideoCapture> m_pCapture;
+    vtcore::io::PlayManager pm;
 };
 
 #endif // MAINWINDOW_H

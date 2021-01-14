@@ -31,7 +31,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="GlVideoWidget" name="canvas"/>
+     <widget class="vtcore::render::GlVideoWidget" name="canvas"/>
     </item>
     <item>
      <widget class="QSlider" name="horizontalSlider">
@@ -247,9 +247,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>GlVideoWidget</class>
+   <class>vtcore::render::GlVideoWidget</class>
    <extends>QOpenGLWidget</extends>
-   <header>src/glvideowidget.h</header>
+   <header>vtcore/render/glvideowidget.h</header>
   </customwidget>
  </customwidgets>
  <resources>

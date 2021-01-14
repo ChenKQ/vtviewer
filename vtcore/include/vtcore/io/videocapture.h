@@ -7,7 +7,9 @@
 
 #include <memory>
 
-namespace vtviewer
+namespace vtcore
+{
+namespace io
 {
 
 class IVideoCapture
@@ -44,8 +46,8 @@ private:
     cv::Mat image;
     std::string path;
 };
-
-} // namespace vtviewer
+} // namespace io
+} // namespace vtcore
 
 
 #endif // VIDEOCAPTURE_H

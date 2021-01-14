@@ -1,8 +1,10 @@
-#include "playmanager.h"
+#include "vtcore/io/playmanager.h"
 
 #include <QDebug>
 
-namespace vtviewer
+namespace vtcore
+{
+namespace io
 {
 
 PlayManager::~PlayManager()
@@ -88,4 +90,5 @@ void PlayManager::producer_thread(IVideoCapture &reader)
     }
 }
 
-}   // namespace brick
+} // namespace io
+}   // namespace vtcore

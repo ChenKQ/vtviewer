@@ -8,10 +8,12 @@
 
 #include <memory>
 
-namespace vtviewer
+namespace vtcore
 {
+namespace render
+{
+
 struct View;
-}
 
 class GLImageRender: public QOpenGLFunctions
 {
@@ -20,7 +22,7 @@ public:
     ~GLImageRender();
 
     void initialize();
-    void render(const unsigned char*pData, int width, int height, const vtviewer::View& view);
+    void render(const unsigned char*pData, int width, int height, const View& view);
 private:
     QOpenGLShaderProgram m_program;
     QOpenGLVertexArrayObject vao;
@@ -45,5 +47,9 @@ private:
         1, 2, 3   // second Triangle
     };
 };
+
+}   // namespace render
+}   // namespace vtcore
+
 
 #endif // GLVIDEORENDER_H
