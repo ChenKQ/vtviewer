@@ -19,6 +19,7 @@ public:
     virtual bool isOpen() const = 0;
     virtual cv::Mat previous() = 0;
     virtual cv::Mat next() = 0;
+    virtual cv::Mat current() = 0;
     virtual void reset() = 0;
     virtual size_t frameCount() const = 0;
     virtual size_t currentFrameIndex() const = 0;
@@ -36,6 +37,7 @@ public:
     bool isOpen() const override;
     cv::Mat previous() override;
     cv::Mat next() override;
+    cv::Mat current() override;
     void reset() override;
     size_t frameCount() const override;
     size_t currentFrameIndex() const override;
