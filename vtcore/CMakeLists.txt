@@ -12,12 +12,18 @@ add_library(vtcore SHARED shaders/shaders.qrc
     include/vtcore/render/coordinate.h src/render/coordinate.cpp
     include/vtcore/render/view.h src/render/view.cpp
     include/vtcore/render/glvideorender.h src/render/glvideorender.cpp
+    include/vtcore/render/marks.h src/render/marks.cpp
     include/vtcore/render/glvideowidget.h src/render/glvideowidget.cpp
 
     include/vtcore/io/videocapture.h src/io/videocapture.cpp
     include/vtcore/io/playmanager.h src/io/playmanager.cpp
+    include/vtcore/io/annotationfinder.h src/io/annotationfinder.cpp
+    include/vtcore/io/otb.h src/io/otb.cpp
+
+    include/vtcore/tracking/bbox.h
 )
 target_include_directories(vtcore PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
 target_link_libraries(vtcore PUBLIC Qt5::Core Qt5::Gui Qt5::Widgets
                                     ${OPENGL_LIBRARY} ${OpenCV_LIBS} ${LINK_LIBS}
 )
+set_property(TARGET vtcore PROPERTY CXX_STANDARD 17)
