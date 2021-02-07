@@ -77,11 +77,11 @@ void GLImageRender::initialize()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void GLImageRender::render(const unsigned char*pData, int width, int height, const View& view)
+void GLImageRender::render(const cv::Mat& img, const View& view)
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    if(pData == nullptr)
+    if(img.empty())
         return;
 
     m_program.bind();
@@ -95,8 +95,10 @@ void GLImageRender::render(const unsigned char*pData, int width, int height, con
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texImage);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
-                     GL_BGR, GL_UNSIGNED_BYTE, pData);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+//        glPixelStorei(GL_UNPACK_ROW_LENGTH, static_cast<int>(img.step/img.elemSize()));
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.cols, img.rows, 0,
+                     GL_BGR, GL_UNSIGNED_BYTE, img.ptr());
 
         QOpenGLVertexArrayObject::Binder vaoBinder(&vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);

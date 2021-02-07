@@ -8,6 +8,8 @@
 
 #include <memory>
 
+#include <opencv2/core.hpp>
+
 namespace vtcore
 {
 namespace render
@@ -22,7 +24,7 @@ public:
     ~GLImageRender();
 
     void initialize();
-    void render(const unsigned char*pData, int width, int height, const View& view);
+    void render(const cv::Mat& img, const View& view);
 private:
     QOpenGLShaderProgram m_program;
     QOpenGLVertexArrayObject vao;
