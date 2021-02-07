@@ -3,6 +3,7 @@
 
 #include "vtcore/io/videocapture.h"
 #include "vtcore/io/playmanager.h"
+#include "vtcore/io/annotationfinder.h"
 
 #include <opencv2/core.hpp>
 #include <QMainWindow>
@@ -51,17 +52,24 @@ private slots:
 
     void on_actionVideoFile_triggered();
 
+    void on_actionOTB_triggered();
+
 private:
     void initStyle();
 
     void initializeSlider();
     void updateSlider(const vtcore::io::IVideoCapture& cap, QSlider& slider);
 
+    void openDirectory(std::string captureType);
+
 private:
     Ui::MainWindow *ui;
 
     std::unique_ptr<vtcore::io::IVideoCapture> m_pCapture;
     vtcore::io::PlayManager pm;
+
+    std::unique_ptr<vtcore::io::IAnnotationFinder> m_pFinder;
+
 };
 
 #endif // MAINWINDOW_H

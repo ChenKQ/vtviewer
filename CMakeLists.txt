@@ -26,3 +26,4 @@ add_executable(vtviewer main.cpp
 target_link_libraries(vtviewer Qt5::Gui vtcore
 )
 target_include_directories(vtviewer PUBLIC ${CMAKE_CURRENT_LIST_DIR})
+set_property(TARGET vtviewer PROPERTY CXX_STANDARD 17)
