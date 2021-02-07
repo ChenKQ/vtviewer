@@ -1,4 +1,5 @@
 #include "vtcore/io/videocapture.h"
+#include "vtcore/io/otb.h"
 
 namespace vtcore
 {
@@ -30,6 +31,14 @@ cv::Mat VideoCapture::next()
     return image;
 }
 
+cv::Mat VideoCapture::current()
+{
+    size_t currentIndex = currentFrameIndex();
+    capture.set(cv::CAP_PROP_POS_FRAMES, currentIndex-1);
+    capture >> image;
+    return image;
+}
+
 void VideoCapture::reset()
 {
     capture.release();
@@ -53,9 +62,15 @@ void VideoCapture::setFrameIndex(size_t index)
 
 std::unique_ptr<IVideoCapture> IVideoCapture::CreateInstance(const std::string &captureType)
 {
-    if(captureType == "videoFile")
+    if(captureType == "video")
     {
         VideoCapture* p = new VideoCapture;
+        return std::unique_ptr<IVideoCapture>(p);
+    }
+
+    if(captureType == "otb")
+    {
+        OtbCapture* p = new OtbCapture;
         return std::unique_ptr<IVideoCapture>(p);
     }
 
