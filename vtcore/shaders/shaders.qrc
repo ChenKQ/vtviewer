@@ -14,6 +14,5 @@
         <file>renderRGB.vert</file>
         <file>renderYUV420P.frag</file>
         <file>renderYUV420P.vert</file>
-        <file>shaders.qrc</file>
     </qresource>
 </RCC>
