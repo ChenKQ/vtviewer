@@ -40,7 +40,7 @@ struct OffsetTransform
 };
 
 } // namespace render
-}   // namespace vtcore
+} // namespace vtcore
 
 
 #endif // COORDINATE_H

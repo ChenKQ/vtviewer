@@ -9,7 +9,7 @@ CoordinateF CoordinateTransform::Qt2OpenGL(const CoordinateInt &posInQt, const S
 {
     using PosType = CoordinateF::Type;
     PosType x = static_cast<PosType>(2*posInQt.x)/windowSize.x - 1.0f;
-    PosType y = static_cast<PosType>(2*posInQt.y)/windowSize.y - 1.0f;
+    PosType y = -static_cast<PosType>(2*posInQt.y)/windowSize.y + 1.0f;
     return {x,y};
 }
 
