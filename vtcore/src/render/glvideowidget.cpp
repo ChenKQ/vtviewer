@@ -1,7 +1,10 @@
 #include "vtcore/render/glvideowidget.h"
 #include "vtcore/render/view.h"
+#include "vtcore/render/coordinate.h"
 
 #include <QMouseEvent>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
 
 namespace vtcore
 {
@@ -11,6 +14,8 @@ namespace render
 GlVideoWidget::GlVideoWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
     setCursor(Qt::CursorShape::DragMoveCursor);
+    m_annotationPainter.setColor(0.0f, 1.0f, 0.0f);
+    m_detectionPainter.setColor(1.0f, 0.0f, 0.0f);
 }
 
 GlVideoWidget::~GlVideoWidget()
@@ -25,7 +30,27 @@ void GlVideoWidget::updateBuffer(const cv::Mat& img)
         imgBuffer = cv::Mat(img.rows, img.cols, CV_8UC3);
     }
 
-    img.copyTo(imgBuffer);
+    if(!img.empty() && img.channels()==1)
+    {
+        cv::cvtColor(img, imgBuffer, cv::COLOR_GRAY2BGR);
+    }
+    else
+    {
+        img.copyTo(imgBuffer);
+    }
+
+    this->update();
+}
+
+void GlVideoWidget::updateAnnotations(const std::vector<tracking::BBox> &boxes)
+{
+    annotations = boxes;
+    this->update();
+}
+
+void GlVideoWidget::updateDetections(const std::vector<tracking::BBox> &boxes)
+{
+    detections = boxes;
     this->update();
 }
 
@@ -56,6 +81,8 @@ void GlVideoWidget::zoomOut()
 void GlVideoWidget::initializeGL()
 {
     m_render.initialize();
+    m_annotationPainter.initialize();
+    m_detectionPainter.initialize();
 
     vtcore::render::SizeInt winSize {this->width(), this->height()};
     m_view.fitDisplay(winSize, winSize);
@@ -78,7 +105,14 @@ void GlVideoWidget::paintGL()
     }
     m_view.updateGLBorder(winSize, imgSize);
 
-    m_render.render(imgBuffer.data, imgBuffer.cols, imgBuffer.rows, m_view);
+    m_render.render(imgBuffer, m_view);
+    for(tracking::BBox& box : annotations)
+    {
+        CoordinateF topLeftGL = CoordinateTransform::Qt2OpenGL(CoordinateInt{box.minx, box.miny}, imgSize);
+        CoordinateF bottomRightGL = CoordinateTransform::Qt2OpenGL(CoordinateInt{box.maxx, box.maxy}, imgSize);
+        m_annotationPainter.updateRectBound(topLeftGL.y, bottomRightGL.y, topLeftGL.x, bottomRightGL.x);
+        m_annotationPainter.render(m_view);
+    }
 }
 
 void GlVideoWidget::mousePressEvent(QMouseEvent *event)
